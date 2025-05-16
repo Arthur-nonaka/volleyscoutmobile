@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Switch, ImageBackground } from 'react-native';
 
 export default function VolleyballCourtHorizontal() {
   const [selectedPosition, setSelectedPosition] = useState(null);
@@ -10,6 +10,7 @@ export default function VolleyballCourtHorizontal() {
   const [notation, setNotation] = useState("");
   const [playerNumber, setPlayerNumber] = useState("");
   const [message, setMessage] = useState("Ola !");
+  const [isSelectingPlayer, setIsSelectingPlayer] = useState(false);
 
   const actions = ["Attack", "Dig", "Freeball", "Receive", "Set", "Block", "Serve"];
   const qualities = [
@@ -80,74 +81,76 @@ export default function VolleyballCourtHorizontal() {
       <View style={styles.container}>
         {/* Court container */}
         <View style={styles.court}>
-          {/* Positions arranged in two columns horizontally */}
-          <View style={styles.column}>
-            {[1, 3, 5].map(pos => (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
-                <TouchableOpacity
-                  key={pos}
-                  style={[
-                    styles.position,
-                    selectedPosition === pos && styles.selectedPosition
-                  ]}
-                  onPress={() => onPositionPress(pos)}
-                >
-                  <Text style={styles.positionText}>{pos}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+          <ImageBackground source={require('./assets/court.jpg')} style={{ width: "100%", height: "100%", flex: 1, justifyContent: "space-between", flexDirection: "row", alignItems: "center" }} resizeMode="cover">
 
-          <View style={styles.column}>
-            {[2, 4, 6].map(pos => (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
-                <TouchableOpacity
-                  key={pos}
-                  style={[
-                    styles.position,
-                    selectedPosition === pos && styles.selectedPosition
-                  ]}
-                  onPress={() => onPositionPress(pos)}
-                >
-                  <Text style={styles.positionText}>{pos}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+            <View style={styles.column}>
+              {[5, 6, 1].map(pos => (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
+                  <TouchableOpacity
+                    key={pos}
+                    style={[
+                      isSelectingPlayer ? styles.position : styles.square,
+                      selectedPosition === pos && styles.selectedPosition
+                    ]}
+                    onPress={() => onPositionPress(pos)}
+                  >
+                    <Text style={styles.positionText}>{pos}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.column}>
+              {[4, 3, 2].map(pos => (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
+                  <TouchableOpacity
+                    key={pos}
+                    style={[
+                      isSelectingPlayer ? styles.position : styles.square,
+                      selectedPosition === pos && styles.selectedPosition
+                    ]}
+                    onPress={() => onPositionPress(pos)}
+                  >
+                    <Text style={styles.positionText}>{pos}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
 
 
-          <View style={styles.column}>
-            {[1, 2, 3].map(pos => (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
-                <TouchableOpacity
-                  key={pos}
-                  style={[
-                    styles.position,
-                    selectedPosition === pos && styles.selectedPosition,
-                    { backgroundColor: "#ff82f6" }
-                  ]}
-                >
-                  <Text style={styles.positionText}>{pos}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-          <View style={styles.column}>
-            {[4, 5, 6].map(pos => (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
-                <TouchableOpacity
-                  key={pos}
-                  style={[
-                    styles.position,
-                    selectedPosition === pos && styles.selectedPosition,
-                    { backgroundColor: "#ff82f6" }
-                  ]}
-                >
-                  <Text style={styles.positionText}>{pos}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+            <View style={styles.column}>
+              {[2, 3, 4].map(pos => (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
+                  <TouchableOpacity
+                    key={pos}
+                    style={[
+                      styles.position,
+                      selectedPosition === pos && styles.selectedPosition,
+                      { backgroundColor: "#ff0000" }
+                    ]}
+                  >
+                    <Text style={styles.positionText}>{pos}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+            <View style={styles.column}>
+              {[1, 6, 5].map(pos => (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }} key={pos}>
+                  <TouchableOpacity
+                    key={pos}
+                    style={[
+                      styles.position,
+                      selectedPosition === pos && styles.selectedPosition,
+                      { backgroundColor: "#ff0000" }
+                    ]}
+                  >
+                    <Text style={styles.positionText}>{pos}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </ImageBackground>
         </View>
 
         <ScrollView style={styles.actionsContainer}>
@@ -227,17 +230,24 @@ const styles = StyleSheet.create({
   court: {
     flexDirection: 'row',
     backgroundColor: '#f97316', // orange background like your image
-    borderWidth: 2,
-    borderColor: '#000',
     padding: 8,
-    borderRadius: 8,
-    justifyContent: 'space-between',
     width: '65%',
+
   },
   column: {
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: '65%',
+  },
+  square: {
+    width: 100,
+    height: 100,
+    border: '10px dashed #3b82f6',
+    backgroundColor: 'rgb(91, 146, 235)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
   },
   position: {
     width: 100,
@@ -355,7 +365,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   messageContainer: {
-    marginTop: 20,
     padding: 10,
     backgroundColor: '#e5e7eb', // gray-200
     borderRadius: 8,
@@ -363,7 +372,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   messageText: {
-    fontSize: 16,
+    fontSize: 30,
     color: '#111827', // gray-900
   }
 });
